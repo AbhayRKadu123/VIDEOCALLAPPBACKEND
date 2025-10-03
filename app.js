@@ -70,6 +70,14 @@ io.on("connection", (socket) => {
 
     }
   });
+  socket.on("disconnect", () => {
+    // Find the username for this socket
+    const username = getUsernameBySocketId(socket.id);
+    if (username) {
+      delete RegisteredUsers[username];
+      console.log(`User ${username} disconnected. Updated users:`, RegisteredUsers);
+    }
+  });
 });
 
 server.listen(5000, () => console.log("Server running on port 5000"));
