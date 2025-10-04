@@ -48,6 +48,9 @@ function getUsernameBySocketId(socketId) {
   );
 }
 
+// io.get("/",(req,res)=>{
+//   res.json("videocalling app")
+// })
 io.on("connection", (socket) => {
   console.log("Connected:", socket.id);
 
@@ -57,6 +60,7 @@ io.on("connection", (socket) => {
     socket.data.username = username; // store username in socket object
     console.log(`Registered user: ${username} (${socket.id})`);
     console.log("Current users:", RegisteredUsers);
+    io.emit("user-registered",{msg:true,ID:socket.id,lst:RegisteredUsers,lstlength:Object.keys(RegisteredUsers).length})
   });
 
   // Offer
@@ -100,7 +104,9 @@ io.on("connection", (socket) => {
 
   // Disconnect
   socket.on("disconnect", () => {
+    console.log('RegisteredUsers=',RegisteredUsers)
     const username = getUsernameBySocketId(socket.id);
+    console.log('username=',username)
     if (username) {
       delete RegisteredUsers[username];
       console.log(`User disconnected: ${username} (${socket.id})`);
